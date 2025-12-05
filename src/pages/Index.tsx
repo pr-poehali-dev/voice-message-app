@@ -161,17 +161,19 @@ export default function Index() {
               <div className="flex items-center gap-2 mb-4">
                 <Button
                   onClick={() => setShowNewChatMenu(!showNewChatMenu)}
-                  variant="outline"
-                  className="flex-1 h-10 rounded-full border-border/50 hover:bg-muted"
+                  className="flex-1 h-12 rounded-2xl bg-primary/10 hover:bg-primary/20 text-foreground border-none transition-all hover:scale-[1.02]"
                 >
-                  <Icon name="UserPlus" size={18} className="mr-2" />
+                  <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mr-2">
+                    <Icon name="MessageCircle" size={16} className="text-primary" />
+                  </div>
                   Новый чат
                 </Button>
                 <Button
-                  variant="outline"
-                  className="flex-1 h-10 rounded-full border-border/50 hover:bg-muted"
+                  className="flex-1 h-12 rounded-2xl bg-primary/10 hover:bg-primary/20 text-foreground border-none transition-all hover:scale-[1.02]"
                 >
-                  <Icon name="Users" size={18} className="mr-2" />
+                  <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mr-2">
+                    <Icon name="Users" size={16} className="text-primary" />
+                  </div>
                   Группа
                 </Button>
               </div>
