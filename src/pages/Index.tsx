@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Input } from '@/components/ui/input';
 import Icon from '@/components/ui/icon';
 
 interface Chat {
@@ -67,6 +68,8 @@ export default function Index() {
   const [selectedChat, setSelectedChat] = useState<number | null>(null);
   const [recordingTime, setRecordingTime] = useState(0);
   const [audioLevel, setAudioLevel] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showNewChatMenu, setShowNewChatMenu] = useState(false);
 
   useEffect(() => {
     if (isDark) {
@@ -113,6 +116,10 @@ export default function Index() {
       .toUpperCase();
   };
 
+  const filteredChats = mockChats.filter((chat) =>
+    chat.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <div className="mx-auto max-w-md h-screen flex flex-col">
@@ -136,15 +143,58 @@ export default function Index() {
         {!selectedChat ? (
           <div className="flex-1 overflow-y-auto">
             <div className="p-4">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-medium">Чаты</h2>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <Icon name="Plus" size={20} />
+              <div className="relative mb-4">
+                <Icon
+                  name="Search"
+                  size={18}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
+                />
+                <Input
+                  type="text"
+                  placeholder="Поиск чатов..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-11 pr-4 h-11 rounded-full bg-muted border-none focus-visible:ring-1 focus-visible:ring-primary"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 mb-4">
+                <Button
+                  onClick={() => setShowNewChatMenu(!showNewChatMenu)}
+                  variant="outline"
+                  className="flex-1 h-10 rounded-full border-border/50 hover:bg-muted"
+                >
+                  <Icon name="UserPlus" size={18} className="mr-2" />
+                  Новый чат
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex-1 h-10 rounded-full border-border/50 hover:bg-muted"
+                >
+                  <Icon name="Users" size={18} className="mr-2" />
+                  Группа
                 </Button>
               </div>
 
+              {showNewChatMenu && (
+                <div className="mb-4 p-4 bg-muted/50 rounded-2xl animate-fade-in">
+                  <p className="text-sm text-muted-foreground mb-3">Создать новый чат</p>
+                  <Input
+                    type="text"
+                    placeholder="Введите имя или номер..."
+                    className="h-10 rounded-xl bg-background border-border/50"
+                  />
+                </div>
+              )}
+
               <div className="space-y-2">
-                {mockChats.map((chat, index) => (
+                {filteredChats.length === 0 && searchQuery && (
+                  <div className="text-center py-12 animate-fade-in">
+                    <Icon name="Search" size={48} className="mx-auto mb-3 text-muted-foreground/50" />
+                    <p className="text-muted-foreground">Чаты не найдены</p>
+                  </div>
+                )}
+                {filteredChats.map((chat, index) => (
                   <div
                     key={chat.id}
                     onClick={() => setSelectedChat(chat.id)}
