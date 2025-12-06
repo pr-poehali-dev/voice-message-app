@@ -70,6 +70,7 @@ export default function Index() {
   const [audioLevel, setAudioLevel] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [showNewChatMenu, setShowNewChatMenu] = useState(false);
+  const [activeTab, setActiveTab] = useState<'chats' | 'calls' | 'profile'>('chats');
 
   useEffect(() => {
     if (isDark) {
@@ -128,7 +129,11 @@ export default function Index() {
             <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
               <Icon name="Mic" size={20} className="text-primary-foreground" />
             </div>
-            <h1 className="text-xl font-semibold">VoiceChat</h1>
+            <h1 className="text-xl font-semibold">
+              {activeTab === 'chats' && 'VoiceChat'}
+              {activeTab === 'calls' && 'Звонки'}
+              {activeTab === 'profile' && 'Профиль'}
+            </h1>
           </div>
           <Button
             variant="ghost"
@@ -140,7 +145,7 @@ export default function Index() {
           </Button>
         </header>
 
-        {!selectedChat ? (
+        {!selectedChat && activeTab === 'chats' ? (
           <div className="flex-1 overflow-y-auto">
             <div className="p-4">
               <div className="relative mb-4">
@@ -229,6 +234,80 @@ export default function Index() {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        ) : !selectedChat && activeTab === 'calls' ? (
+          <div className="flex-1 flex items-center justify-center p-8">
+            <div className="text-center">
+              <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                <Icon name="Phone" size={32} className="text-primary" />
+              </div>
+              <h2 className="text-xl font-semibold mb-2">История звонков</h2>
+              <p className="text-muted-foreground">Здесь будут ваши голосовые вызовы</p>
+            </div>
+          </div>
+        ) : !selectedChat && activeTab === 'profile' ? (
+          <div className="flex-1 overflow-y-auto p-4">
+            <div className="flex flex-col items-center mb-6 pt-4">
+              <Avatar className="w-24 h-24 mb-4">
+                <AvatarFallback className="bg-primary/10 text-primary text-2xl font-medium">
+                  ВЫ
+                </AvatarFallback>
+              </Avatar>
+              <h2 className="text-2xl font-semibold mb-1">Ваше имя</h2>
+              <p className="text-muted-foreground">+7 999 123-45-67</p>
+            </div>
+
+            <div className="space-y-2">
+              <Button
+                variant="ghost"
+                className="w-full justify-start h-14 rounded-2xl hover:bg-muted"
+              >
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                  <Icon name="User" size={18} className="text-primary" />
+                </div>
+                <span>Редактировать профиль</span>
+              </Button>
+
+              <Button
+                variant="ghost"
+                className="w-full justify-start h-14 rounded-2xl hover:bg-muted"
+              >
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                  <Icon name="Bell" size={18} className="text-primary" />
+                </div>
+                <span>Уведомления</span>
+              </Button>
+
+              <Button
+                variant="ghost"
+                className="w-full justify-start h-14 rounded-2xl hover:bg-muted"
+              >
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                  <Icon name="Lock" size={18} className="text-primary" />
+                </div>
+                <span>Приватность</span>
+              </Button>
+
+              <Button
+                variant="ghost"
+                className="w-full justify-start h-14 rounded-2xl hover:bg-muted"
+              >
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                  <Icon name="Palette" size={18} className="text-primary" />
+                </div>
+                <span>Оформление</span>
+              </Button>
+
+              <Button
+                variant="ghost"
+                className="w-full justify-start h-14 rounded-2xl hover:bg-muted"
+              >
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                  <Icon name="HelpCircle" size={18} className="text-primary" />
+                </div>
+                <span>Помощь</span>
+              </Button>
             </div>
           </div>
         ) : (
@@ -374,6 +453,70 @@ export default function Index() {
               </div>
             </div>
           </div>
+        )}
+
+        {!selectedChat && (
+          <nav className="sticky bottom-0 z-10 bg-card border-t border-border px-6 py-2 flex items-center justify-around">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setActiveTab('chats')}
+              className={`flex flex-col items-center gap-1 h-auto py-2 px-4 rounded-2xl transition-all ${
+                activeTab === 'chats' ? 'bg-primary/10' : 'hover:bg-muted'
+              }`}
+            >
+              <Icon
+                name="MessageCircle"
+                size={22}
+                className={activeTab === 'chats' ? 'text-primary' : 'text-muted-foreground'}
+              />
+              <span className={`text-xs ${
+                activeTab === 'chats' ? 'text-primary font-medium' : 'text-muted-foreground'
+              }`}>
+                Чаты
+              </span>
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setActiveTab('calls')}
+              className={`flex flex-col items-center gap-1 h-auto py-2 px-4 rounded-2xl transition-all ${
+                activeTab === 'calls' ? 'bg-primary/10' : 'hover:bg-muted'
+              }`}
+            >
+              <Icon
+                name="Phone"
+                size={22}
+                className={activeTab === 'calls' ? 'text-primary' : 'text-muted-foreground'}
+              />
+              <span className={`text-xs ${
+                activeTab === 'calls' ? 'text-primary font-medium' : 'text-muted-foreground'
+              }`}>
+                Звонки
+              </span>
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setActiveTab('profile')}
+              className={`flex flex-col items-center gap-1 h-auto py-2 px-4 rounded-2xl transition-all ${
+                activeTab === 'profile' ? 'bg-primary/10' : 'hover:bg-muted'
+              }`}
+            >
+              <Icon
+                name="User"
+                size={22}
+                className={activeTab === 'profile' ? 'text-primary' : 'text-muted-foreground'}
+              />
+              <span className={`text-xs ${
+                activeTab === 'profile' ? 'text-primary font-medium' : 'text-muted-foreground'
+              }`}>
+                Профиль
+              </span>
+            </Button>
+          </nav>
         )}
       </div>
     </div>
